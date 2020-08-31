@@ -30,7 +30,7 @@ def batch_loss_single_matrix(X, y, W):
     loss = np.sum(losses, axis=1)
     return loss
 
-def softmax(x, y, W):
+def softmax_loss(x, y, W):
     scores = W.dot(x)
     exp_score = np.exp(scores)
     losses = exp_score / np.sum(exp_score)
@@ -39,9 +39,24 @@ def softmax(x, y, W):
     print(loss)
     return loss
 
+def softmax_loss_batch(X, Y, W, batch_first=False):
+    if batch_first:
+        X = X.transpose()
+    scores = W.dot(X)
+    exp_scores = np.exp(scores)
+    sums = np.sum(exp_scores, axis=0).reshape(1, exp_scores.shape[1])
+    losses = exp_scores / sums
+    log_losses = -np.log(losses)
+    loss = log_losses[Y, np.arange(log_losses.shape[1])]
+    batch_loss = np.mean(loss)
+    return batch_loss
+
+def predict_by_weight(X, Y, W, batch_first=False):
+    if batch_first:
+        X = X.transpose()
+    scores = W.dot(X)
+    Y_predict = np.argmax(scores, axis=0)
+    return np.mean(Y_predict == Y)
+
 if __name__ == '__main__':
-    x = np.array([1, -15, 22, -44, 56])
-    W = np.array([[0, 0.2, -0.3], [0.01, 0.7, 0], [-0.05, 0.2, -0.45],[0.1, 0.05, -0.2],[0.05, 0.16, 0.03]])
-    W = W.transpose()
     y = 2
-    softmax(x, y, W)

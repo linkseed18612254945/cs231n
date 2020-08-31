@@ -1,4 +1,4 @@
-from assignment1.cs231n.data_utils import load_CIFAR10
+
 import numpy as np
 from collections import Counter
 from tqdm import trange
@@ -65,25 +65,5 @@ def validation_image_build(X, Y, valid_prob):
     X_train = X_train.reshape(X_train.shape[0], -1)
     X_val = X_val.reshape(X_val.shape[0], -1)
     return X_train, y_train, X_val, y_val
-
-
-
-if __name__ == '__main__':
-    cifar10_dir = 'cs231n/datasets/cifar-10-batches-py'
-    val_prob = 0.1
-    num_training = 5000
-    num_test = 500
-    k = 5
-    h = 1
-    X_train, y_train, X_test, y_test = load_CIFAR10(cifar10_dir)
-    X_train, y_train, X_test, y_test = image_process(X_train, y_train, X_test, y_test, num_training, num_test)
-    X_train, y_train, X_val, y_val = validation_image_build(X_train, y_train, val_prob)
-
-    for k in [1, 3, 5, 10, 20, 50, 100]:
-        print('k : {}'.format(k))
-        classifier = KNearestNeighbor(h)
-        classifier.train(X_train, y_train)
-        y_predict = classifier.predict_labels(X_val, k)
-        evaluate(y_val, y_predict)
 
 
