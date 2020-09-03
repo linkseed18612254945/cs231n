@@ -2,7 +2,7 @@ import numpy as np
 from lecture3 import softmax_loss_batch, predict_by_weight
 import seaborn
 from matplotlib import pyplot as plt
-from experiments import cifar10_datasets
+from data_utils import cifar10_datasets
 import tqdm
 
 def random_optimize(X_train, Y_train):
