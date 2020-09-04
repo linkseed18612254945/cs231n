@@ -1,19 +1,33 @@
 import copy
 import os
 import random
-import time
-from functools import wraps
 import numpy as np
 import torch
 from torch import nn
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
-
+from functools import wraps
 import datetime
 import time
 
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
+def logging_time_wrapper(func):
+    """
+    装饰器，装饰的函数将打印运行时间
+    :param func: function， 被装饰的函数对象
+    :return: 装饰后的函数
+    """
+
+    @wraps(func)
+    def time_print_wrapper(*args, **kwargs):
+        start_time = time.time()
+        res = func(*args, **kwargs)
+        end_time = time.time()
+        print('function[{}] run success -- cost time {:.3f} s'.format(func.__name__, end_time - start_time))
+        return res
+
+    return time_print_wrapper
 
 def time_string_to_timestamp(time_string):
     """
@@ -76,31 +90,6 @@ def get_range_time(start, gap_day):
     start_time = datetime.datetime.strptime(start, TIME_FORMAT)
     end = (start_time - datetime.timedelta(gap_day)).strftime(TIME_FORMAT)
     return start, end
-
-if __name__ == '__main__':
-    f2 = TIME_FORMAT
-    f1 = '%Y/%m/%d'
-    c = time_format_change('2020/5/27', f1, f2)
-    print(c)
-
-
-def logging_time_wrapper(func):
-    """
-    装饰器，装饰的函数将打印运行时间
-    :param func: function， 被装饰的函数对象
-    :return: 装饰后的函数
-    """
-
-    @wraps(func)
-    def time_print_wrapper(*args, **kwargs):
-        start_time = time.time()
-        res = func(*args, **kwargs)
-        end_time = time.time()
-        print('function[{}] run success -- cost time {:.3f} s'.format(func.__name__, end_time - start_time))
-        return res
-
-    return time_print_wrapper
-
 
 def remove_str_from_sentence(text, strs):
     for s in strs:
